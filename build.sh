@@ -6,6 +6,19 @@ TARGET_VARIANT=generic
 TARGET_DEVICE=tl-wr710n-v1
 RELEASE="17.01.4"
 
+absolutize ()
+{
+  if [ ! -d "$1" ]; then
+    echo
+    echo "ERROR: '$1' doesn't exist or not a directory!"
+    kill -INT $$
+  fi
+
+  pushd "$1" >/dev/null
+  echo `pwd`
+  popd >/dev/null
+}
+
 BUILD=`dirname "$0"`"/build/"
 BUILD=`absolutize $BUILD`
 
