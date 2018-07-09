@@ -35,7 +35,9 @@ if [ ! -e ${IMGBUILDER_DIR} ]; then
     popd
 fi
 
-rm "$(readlink 'latest.bin')"
+if [ -e "$(readlink 'latest.bin')" ]; then
+  rm "$(readlink 'latest.bin')"
+fi
 
 # EXCLUDE PACKAGES
 PKG=" -ip6tables"
@@ -68,7 +70,7 @@ PKG+=" uhttpd"
 #P="$P usb-modeswitch"
 
 pushd ${IMGBUILDER_DIR}
-make image PROFILE=${TARGET_DEVICE} PACKAGES="$PKG" FILES=files/
+make image PROFILE=${TARGET_DEVICE} PACKAGES="$PKG" FILES=files
 pushd bin/targets/${TARGET_ARCHITECTURE}/
 ln -s ../../packages .
 popd
