@@ -35,7 +35,7 @@ if [ ! -e ${IMGBUILDER_DIR} ]; then
     popd
 fi
 
-rm "$(readlink 'latest.bin')"
+if [ ! -e "$(readlink 'latest.bin')" ] rm "$(readlink 'latest.bin')"
 
 # EXCLUDE PACKAGES
 PKG=" -ip6tables"
