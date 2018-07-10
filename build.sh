@@ -19,7 +19,8 @@ absolutize ()
   popd >/dev/null
 }
 
-BUILD=`dirname "$0"`"/build/"
+ROOT=`pwd`
+BUILD=$ROOT/build/
 BUILD=`absolutize $BUILD`
 
 IMGBUILDER_NAME="lede-imagebuilder-${RELEASE}-${TARGET_ARCHITECTURE}-${TARGET_VARIANT}.Linux-x86_64"
@@ -69,17 +70,27 @@ PKG+=" partx-utils"
 PKG+=" uhttpd"
 #P="$P usb-modeswitch"
 
+echo ${IMGBUILDER_DIR}
 pushd ${IMGBUILDER_DIR}
-make image PROFILE=${TARGET_DEVICE} PACKAGES="$PKG" FILES=files
-pushd bin/targets/${TARGET_ARCHITECTURE}/
-ln -s ../../packages .
+make image PROFILE=${TARGET_DEVICE} PACKAGES="$PKG" FILES=$ROOT/files
 popd
 
-popd
+IMAGE_NAME=lede-$RELEASE-$TARGET_ARCHITECTURE-$TARGET_VARIANT-${TARGET_DEVICE}-squashfs-factory.bin
+
+# echo "----------------------------------"
+ls -al ${IMGBUILDER_DIR}/bin/targets/${TARGET_ARCHITECTURE}/${TARGET_VARIANT}/$IMAGE_NAME
+
+pwd
+
+# lede-17.01.4-ar71xx-generic-tl-wr710n-v1-squashfs-factory.bin
+
+# pushd bin/targets/${TARGET_ARCHITECTURE}/
+# ln -s ../../packages .
+# popd
+
 
 # pushd image-generator
 # make image PROFILE=TLMR3020 PACKAGES="$PKG" FILES=files/
 # popd
 
-echo "----------------------------------"
-ls -al "$(readlink 'latest.bin')"
+# ls -al "$(readlink 'latest.bin')"
