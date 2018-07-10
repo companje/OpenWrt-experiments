@@ -1,6 +1,6 @@
-OpenWrt-Experiments
+# OpenWrt Experiments
 
-# Install
+## Install
 1. clone this repo to a linux install with build essentials
 2. run the script:
 ```
