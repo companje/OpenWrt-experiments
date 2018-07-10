@@ -1,44 +1,11 @@
 #!/bin/bash
 set -e # immediately if a command exits with a non-zero status.
 
+# settings
 TARGET_ARCHITECTURE=ar71xx
 TARGET_VARIANT=generic
 TARGET_DEVICE=tl-wr710n-v1
 RELEASE="17.01.4"
-
-absolutize ()
-{
-  if [ ! -d "$1" ]; then
-    echo
-    echo "ERROR: '$1' doesn't exist or not a directory!"
-    kill -INT $$
-  fi
-
-  pushd "$1" >/dev/null
-  echo `pwd`
-  popd >/dev/null
-}
-
-ROOT=`pwd`
-BUILD=$ROOT/imagebuilder/
-BUILD=`absolutize $BUILD`
-
-IMGBUILDER_NAME="lede-imagebuilder-${RELEASE}-${TARGET_ARCHITECTURE}-${TARGET_VARIANT}.Linux-x86_64"
-IMGBUILDER_DIR="${BUILD}/${IMGBUILDER_NAME}"
-IMGBUILDER_ARCHIVE="${IMGBUILDER_NAME}.tar.xz"
-IMGBUILDERURL="https://downloads.openwrt.org/releases/${RELEASE}/targets/${TARGET_ARCHITECTURE}/${TARGET_VARIANT}/${IMGBUILDER_ARCHIVE}"
-
-#download image builder if needed
-if [ ! -e ${IMGBUILDER_DIR} ]; then
-    pushd ${BUILD}
-    wget  --continue ${IMGBUILDERURL}     # --no-check-certificate if needed
-    xz -d <${IMGBUILDER_ARCHIVE} | tar vx
-    popd
-fi
-
-if [ -e "$(readlink 'latest.bin')" ]; then
-  rm "$(readlink 'latest.bin')"
-fi
 
 # EXCLUDE PACKAGES
 PKG=" -ip6tables"
@@ -54,45 +21,61 @@ PKG+=" -ppp"
 PKG+=" -ppp-mod-pppoe"
 
 # INCLUDE PACKAGES
-PKG+=" block-mount"
-PKG+=" e2fsprogs"
-PKG+=" fdisk"
-PKG+=" kmod-fs-ext4"
-PKG+=" kmod-scsi-core"
-PKG+=" kmod-scsi-generic"
-PKG+=" kmod-usb-core"
-PKG+=" kmod-usb-net-cdc-ether"
-PKG+=" kmod-usb-ohci"
-PKG+=" kmod-usb-storage"
-PKG+=" kmod-usb-uhci"
-PKG+=" kmod-usb2"
-PKG+=" partx-utils"
+# PKG+=" block-mount"
+# PKG+=" e2fsprogs"
+# PKG+=" fdisk"
+# PKG+=" kmod-fs-ext4"
+# PKG+=" kmod-scsi-core"
+# PKG+=" kmod-scsi-generic"
+# PKG+=" kmod-usb-core"
+# PKG+=" kmod-usb-net-cdc-ether"
+# PKG+=" kmod-usb-ohci"
+# PKG+=" kmod-usb-storage"
+# PKG+=" kmod-usb-uhci"
+# PKG+=" kmod-usb2"
+# PKG+=" partx-utils"
+# PKG+=" luci"
 PKG+=" uhttpd"
+PKG+=" php7 php7-cgi"
+PKG+=" openssh-sftp-server"
+
 #P="$P usb-modeswitch"
 
-echo ${IMGBUILDER_DIR}
-pushd ${IMGBUILDER_DIR}
-make image PROFILE=${TARGET_DEVICE} PACKAGES="$PKG" FILES=$ROOT/files
+
+BUILD_FOLDER=imagebuilder
+IMAGEBUILDER_NAME="lede-imagebuilder-${RELEASE}-${TARGET_ARCHITECTURE}-${TARGET_VARIANT}.Linux-x86_64"
+IMAGEBUILDER_DIR="${BUILD_FOLDER}/${IMAGEBUILDER_NAME}"
+IMAGEBUILDER_ARCHIVE="${IMAGEBUILDER_NAME}.tar.xz"
+IMAGEBUILDER_URL="https://downloads.openwrt.org/releases/${RELEASE}/targets/${TARGET_ARCHITECTURE}/${TARGET_VARIANT}/${IMAGEBUILDER_ARCHIVE}"
+
+FIRMWARE_FOLDER=${IMAGEBUILDER_DIR}/bin/targets/${TARGET_ARCHITECTURE}/${TARGET_VARIANT}
+FIRMWARE_NAME=lede-$RELEASE-$TARGET_ARCHITECTURE-$TARGET_VARIANT-${TARGET_DEVICE}-squashfs-factory.bin
+
+#download image builder if needed
+if [ ! -e ${IMAGEBUILDER_DIR} ]; then
+    pushd ${BUILD_FOLDER}
+    wget  --continue ${IMAGEBUILDER_URL}     # --no-check-certificate if needed
+    xz -d <${IMAGEBUILDER_ARCHIVE} | tar vx
+    popd
+fi
+
+# remove previous build results (-f surpress error if not exists)
+rm -f ${FIRMWARE_FOLDER}/*
+rm -f bin/*
+
+# build
+pushd ${IMAGEBUILDER_DIR}
+make image PROFILE=${TARGET_DEVICE} PACKAGES="$PKG" FILES=../../files
 popd
 
-IMAGE_NAME=lede-$RELEASE-$TARGET_ARCHITECTURE-$TARGET_VARIANT-${TARGET_DEVICE}-squashfs-factory.bin
-
-# echo "----------------------------------"
-ls -al ${IMGBUILDER_DIR}/bin/targets/${TARGET_ARCHITECTURE}/${TARGET_VARIANT}/$IMAGE_NAME
-
-ln -s ${IMGBUILDER_DIR}/bin/targets/${TARGET_ARCHITECTURE}/${TARGET_VARIANT}/$IMAGE_NAME latest.bin
-
-pwd
-
-# lede-17.01.4-ar71xx-generic-tl-wr710n-v1-squashfs-factory.bin
-
-# pushd bin/targets/${TARGET_ARCHITECTURE}/
-# ln -s ../../packages .
-# popd
+# create symlinks
+pushd bin
+ln -s ../${FIRMWARE_FOLDER}/${FIRMWARE_NAME} .
+ln -s ../${FIRMWARE_FOLDER}/${FIRMWARE_NAME} latest.bin
+popd
 
 
-# pushd image-generator
-# make image PROFILE=TLMR3020 PACKAGES="$PKG" FILES=files/
-# popd
 
-# ls -al "$(readlink 'latest.bin')"
+
+
+
