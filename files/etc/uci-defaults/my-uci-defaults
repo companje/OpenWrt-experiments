@@ -23,6 +23,11 @@ uci set dhcp.@dnsmasq[0].rebind_protection=0
 # firewall
 uci add_list firewall.@zone[1].network=wwan    # zone 1 should be the zone with name 'wan'
 
+# uhttpd
+uci add_list uhttpd.main.interpreter=".php=/usr/bin/php-cgi"  # unfortunately this removes all comments from /etc/config/uhttpd
+uci set uhttpd.main.index_page="index.html index.php"
+
+# save settings
 uci commit
 
 # WiFi client
