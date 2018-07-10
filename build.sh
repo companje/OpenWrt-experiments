@@ -8,17 +8,17 @@ TARGET_DEVICE=tl-wr710n-v1
 RELEASE="17.01.4"
 
 # EXCLUDE PACKAGES
-PKG=" -ip6tables"
-PKG+=" -kmod-ip6tables"
-PKG+=" -kmod-ipv6"
-PKG+=" -kmod-ppoe"
-PKG+=" -kmod-ppp"
-PKG+=" -kmod-pppox"
-PKG+=" -libip6tc"
-PKG+=" -libip6tc"
-PKG+=" -odhcp6c"
-PKG+=" -ppp"
-PKG+=" -ppp-mod-pppoe"
+# PKG=" -ip6tables"
+# PKG+=" -kmod-ip6tables"
+# PKG+=" -kmod-ipv6"
+# PKG+=" -kmod-ppoe"
+# PKG+=" -kmod-ppp"
+# PKG+=" -kmod-pppox"
+# PKG+=" -libip6tc"
+# PKG+=" -libip6tc"
+# PKG+=" -odhcp6c"
+# PKG+=" -ppp"
+# PKG+=" -ppp-mod-pppoe"
 
 # INCLUDE PACKAGES
 # PKG+=" block-mount"

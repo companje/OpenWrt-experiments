@@ -21,7 +21,7 @@ uci set wireless.@wifi-iface[0].encryption=psk2
 uci set dhcp.@dnsmasq[0].rebind_protection=0
 
 # firewall
-uci addlist firewall.@zone[1].network=wwan    # zone 1 should be the zone with name 'wan'
+uci add_list firewall.@zone[1].network=wwan    # zone 1 should be the zone with name 'wan'
 
 uci commit
 
