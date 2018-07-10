@@ -1,4 +1,4 @@
-# OpenWrt Experiments
+# OpenWrt / LEDE Experiments
 
 ## Install
 1. clone this repo to a linux install with build essentials
