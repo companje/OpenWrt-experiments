@@ -20,7 +20,7 @@ absolutize ()
 }
 
 ROOT=`pwd`
-BUILD=$ROOT/build/
+BUILD=$ROOT/imagebuilder/
 BUILD=`absolutize $BUILD`
 
 IMGBUILDER_NAME="lede-imagebuilder-${RELEASE}-${TARGET_ARCHITECTURE}-${TARGET_VARIANT}.Linux-x86_64"
@@ -79,6 +79,8 @@ IMAGE_NAME=lede-$RELEASE-$TARGET_ARCHITECTURE-$TARGET_VARIANT-${TARGET_DEVICE}-s
 
 # echo "----------------------------------"
 ls -al ${IMGBUILDER_DIR}/bin/targets/${TARGET_ARCHITECTURE}/${TARGET_VARIANT}/$IMAGE_NAME
+
+ln -s ${IMGBUILDER_DIR}/bin/targets/${TARGET_ARCHITECTURE}/${TARGET_VARIANT}/$IMAGE_NAME latest.bin
 
 pwd
 
