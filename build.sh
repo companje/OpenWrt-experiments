@@ -38,8 +38,11 @@ RELEASE="17.01.4"
 PKG+=" uhttpd"
 PKG+=" php7 php7-cgi"
 PKG+=" openssh-sftp-server"
+PKG+=" iwinfo"
+PKG+=" rsync"
+PKG+=" kmod-usb-acm kmod-usb-serial-ch341"
 
-#P="$P usb-modeswitch"
+PKG+=" print3d"
 
 
 BUILD_FOLDER=imagebuilder
@@ -62,6 +65,9 @@ fi
 # remove previous build results (-f surpress error if not exists)
 rm -f ${FIRMWARE_FOLDER}/*
 rm -f bin/*
+
+# copy custom ipk's (not the right way... how can this be done better?)
+cp custom-packages/*.ipk ${IMAGEBUILDER_DIR}/packages
 
 # build
 pushd ${IMAGEBUILDER_DIR}

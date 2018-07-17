@@ -41,6 +41,16 @@ config wifi-iface
 	option encryption 'psk2'
 EOF
 
+# Make webserver accessible from WAN / WWAN
+cat >> /etc/config/firewall << EOF
+config redirect
+	option src       wan
+	option src_dport 80
+	option proto     tcp
+	option dest      lan
+	option dest_ip   192.168.10.1
+EOF
+
 exit 0
 
 
