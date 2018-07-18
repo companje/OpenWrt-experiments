@@ -2,10 +2,17 @@
 set -e # immediately if a command exits with a non-zero status.
 
 # settings
-TARGET_ARCHITECTURE=ar71xx
-TARGET_VARIANT=generic
-TARGET_DEVICE=tl-wr710n-v1
-RELEASE="17.01.4"
+# DEV_GROUP=lede
+# TARGET_ARCHITECTURE=ar71xx
+# TARGET_VARIANT=generic
+# TARGET_DEVICE=tl-wr710n-v1
+# RELEASE="17.01.4"
+
+DEV_GROUP=openwrt
+TARGET_ARCHITECTURE=ramips
+TARGET_VARIANT=mt76x8
+TARGET_DEVICE=tplink_tl-wr902ac-v3
+RELEASE="18.06.0-rc1"
 
 # EXCLUDE PACKAGES
 # PKG=" -ip6tables"
@@ -36,23 +43,26 @@ RELEASE="17.01.4"
 # PKG+=" partx-utils"
 # PKG+=" luci"
 PKG+=" uhttpd"
-PKG+=" php7 php7-cgi"
+PKG+=" php7"
+PKG+=" php7-cgi"
 PKG+=" openssh-sftp-server"
 PKG+=" iwinfo"
 PKG+=" rsync"
-PKG+=" kmod-usb-acm kmod-usb-serial-ch341"
-
-PKG+=" print3d"
+PKG+=" kmod-usb-acm"
+PKG+=" kmod-usb-serial-ch341"
+# PKG+=" libstdcpp"
+# PKG+=" print3d"
+PKG+=" avahi-daemon-service-http"
 
 
 BUILD_FOLDER=imagebuilder
-IMAGEBUILDER_NAME="lede-imagebuilder-${RELEASE}-${TARGET_ARCHITECTURE}-${TARGET_VARIANT}.Linux-x86_64"
+IMAGEBUILDER_NAME="$DEV_GROUP-imagebuilder-${RELEASE}-${TARGET_ARCHITECTURE}-${TARGET_VARIANT}.Linux-x86_64"
 IMAGEBUILDER_DIR="${BUILD_FOLDER}/${IMAGEBUILDER_NAME}"
 IMAGEBUILDER_ARCHIVE="${IMAGEBUILDER_NAME}.tar.xz"
 IMAGEBUILDER_URL="https://downloads.openwrt.org/releases/${RELEASE}/targets/${TARGET_ARCHITECTURE}/${TARGET_VARIANT}/${IMAGEBUILDER_ARCHIVE}"
 
 FIRMWARE_FOLDER=${IMAGEBUILDER_DIR}/bin/targets/${TARGET_ARCHITECTURE}/${TARGET_VARIANT}
-FIRMWARE_NAME=lede-$RELEASE-$TARGET_ARCHITECTURE-$TARGET_VARIANT-${TARGET_DEVICE}-squashfs-factory.bin
+FIRMWARE_NAME=$DEV_GROUP-$RELEASE-$TARGET_ARCHITECTURE-$TARGET_VARIANT-${TARGET_DEVICE}-squashfs-factory.bin
 
 #download image builder if needed
 if [ ! -e ${IMAGEBUILDER_DIR} ]; then
